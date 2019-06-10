@@ -7,14 +7,15 @@
  */
 
 import React, {Component} from 'react';
-import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, Image, ScrollView, Dimensions,TextInput} from 'react-native';
+import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, Image, ScrollView, Dimensions,TextInput, FlatList} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from "moment";
+import { StackActions, NavigationActions } from 'react-navigation';
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default class HourlyWeather extends React.Component {
-
+    
     
 
     static navigationOptions = ({ navigation }) => {
@@ -54,20 +55,8 @@ export default class HourlyWeather extends React.Component {
    
 
    
-  async componentDidMount() {
-    const { navigation } = this.props;
-    const otherParam = navigation.getParam('otherParam');
 
-    if(otherParam){
-        await this.setState({
-            isLoading: true,
-            cityName: otherParam,
-            inputCity: otherParam
-          })
-    }
 
-   await this.callApi();
-  }
 
   async callApi(){
     return fetch('https://api.openweathermap.org/data/2.5/forecast?q='+ this.state.inputCity + '&units=metric&appid=5cacdcffc387b9b5dd7ec2505797e494')
@@ -75,7 +64,8 @@ export default class HourlyWeather extends React.Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          dataSource: responseJson
+          dataSource: responseJson,
+          data: responseJson.list
         }, function() {
         });
       })
@@ -84,19 +74,49 @@ export default class HourlyWeather extends React.Component {
       });
   }
 
+  async componentDidMount() {
+
+    const { navigation } = this.props;
+    const otherParam = navigation.getParam('otherParam');
+    console.log("Hourly: " + otherParam);
+    if(otherParam){
+        await this.setState({
+            isLoading: true,
+            cityName: otherParam,
+            inputCity: otherParam,
+            isShown: false
+          })
+    }
+
+
+   await this.callApi();
+  }
+
   onPress = () => {   
     this.setState({
       isLoading: true,
       cityName: this.state.inputCity
     })
     this.callApi();
-    
+  }
+
+  goToCurrent = () => {
+      const pushAction = StackActions.push({
+        routeName: 'CurrentWeather',
+        params: {
+            otherParam: this.state.inputCity,
+        },
+    });
+      this.props.navigation.dispatch(pushAction);
+  }
+
+  show = () => {
+      this.setState({
+          isShown: !this.state.isShown
+      })
   }
     
   render() {
-    const { navigation } = this.props;
-    const otherParam = navigation.getParam('otherParam', 'some default value');
-
     if (this.state.isLoading) {
       return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -108,14 +128,25 @@ export default class HourlyWeather extends React.Component {
     if(this.state.dataSource.cod==200){
     let rowsOfTiles = [];
     let row = [];
-    for (let i = 0; i < this.state.dataSource.list.length; i++) {
+    for (let i = 0; i < this.state.dataSource.list.length-1; i++) {
       row.push(
         <View key={i}>
-          <TouchableOpacity style={styles.tile}>
+          <TouchableOpacity style={styles.tile} key={i} onPress={this.show}>
             <Text style={styles.tileTextName}>{moment.unix(this.state.dataSource.list[i].dt).format("DD.MM.YYYY HH:mm")}</Text>
             <Text style={styles.tileTemp}> {Math.round(this.state.dataSource.list[i].main.temp)}℃
             <Image style={{height: 40, width: 40}} source={{uri: this.state.iconUrl + this.state.dataSource.list[i].weather[0].icon+'.png'}}></Image></Text>
-          </TouchableOpacity> 
+          </TouchableOpacity>
+          {
+              this.state.isShown &&
+              <View>
+          <Text style={styles.textViewContainer} key={i} > Temperature: {Math.round(this.state.dataSource.list[i].main.temp)}℃ 
+        <Image style={{height: 40, width: 40} } key={i} source={{uri: this.state.iconUrl + this.state.dataSource.list[i].weather[0].icon+'.png'}}></Image></Text>
+        <Text style={styles.textViewContainer} key={i}> Humidity: {this.state.dataSource.list[i].main.humidity}%</Text>
+        <Text style={styles.textViewContainer} key={i}> Pressure: {this.state.dataSource.list[i].main.pressure} hPa</Text>
+        <Text style={styles.textViewContainer} key={i}> Wind: {this.state.dataSource.list[i].wind.speed} km/h</Text>
+        <Text style={styles.textViewContainer} key={i}> Cloudiness: {this.state.dataSource.list[i].clouds.all}%</Text> 
+        </View>
+            }
         </View>
       );
         rowsOfTiles.push(
@@ -130,7 +161,8 @@ export default class HourlyWeather extends React.Component {
             {row}
           </View>  
         )
-      } 
+      }
+      console.log(rowsOfTiles); 
     }
   
     return (
@@ -144,7 +176,23 @@ export default class HourlyWeather extends React.Component {
         <TouchableOpacity style={styles.button} onPress={this.onPress}>
         <Text style={styles.textViewContainer}>Search</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => this.goToCurrent() }>
+        <Text style={styles.textViewContainer}>Current</Text>
+        </TouchableOpacity>
+        
         <Text style={styles.cityText} > {this.state.cityName} </Text>
+        {/* <FlatList
+              data={this.state.data}
+              keyExtractor = {item => item.main.temp}
+              renderItem={({ item }) => (
+                           <TouchableOpacity style={styles.tile} onPress={this.show}>
+                           <Text style={styles.tileTextName}>{moment.unix(item.dt).format("DD.MM.YYYY HH:mm")}</Text>
+                           <Text style={styles.tileTemp}> {Math.round(item.main.temp)}℃
+                           <Image style={{height: 40, width: 40}} source={{uri: this.state.iconUrl + item.weather[0].icon+'.png'}}></Image></Text>
+                         </TouchableOpacity>
+                         
+              )} 
+            /> */}
         {rowsOfTiles} 
       </ScrollView>  
     );
@@ -159,6 +207,9 @@ export default class HourlyWeather extends React.Component {
 
     <TouchableOpacity style={styles.button} onPress={this.onPress}>
     <Text style={styles.textViewContainer}>Search</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.button} onPress={() => this.goToCurrent() }>
+    <Text style={styles.textViewContainer}>Current</Text>
     </TouchableOpacity>
 
     <Text style={styles.textViewContainer}>Incorrect city name</Text>

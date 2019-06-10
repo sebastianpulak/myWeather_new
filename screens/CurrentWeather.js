@@ -9,19 +9,13 @@
 import React, {Component} from 'react';
 import { AppRegistry, StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, TextInput, Image, ScrollView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 export default class CurrentWeather extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          isLoading: true,
-          inputCity: 'London',
-          cityName: 'London',
-          iconUrl: 'http://openweathermap.org/img/w/',
-        }
-      }
+      
 
     static navigationOptions = ({ navigation }) => {
+        const { params = {} } = navigation.state;
         return {
           headerTitleStyle: {
             alignSelf: 'center',
@@ -36,23 +30,48 @@ export default class CurrentWeather extends React.Component {
             <Ionicons style={{ flex: 10, marginLeft: 15 }} name="ios-arrow-back" size={30} color="#fff"
               onPress={() => navigation.navigate('Main')} />
           ),
-
-          headerRight: (
-            <Text onPress={() => { navigation.navigate('HourlyWeather', {
-                otherParam: this.state.inputCity,
-              })
-            }}>Hourly weather</Text>
-            
-          )
         }
       };  
+
+      constructor(props) {
+        super(props);
+        this.state = {
+          isLoading: true,
+          inputCity: 'London',
+          cityName: 'London',
+          iconUrl: 'http://openweathermap.org/img/w/',
+        }
+      }
   
    
-  componentDidMount() {
-   this.callApi();
+      async componentDidMount() {
+        const { navigation } = this.props;
+        const otherParam = navigation.getParam('otherParam');
+        console.log("Current: "+ otherParam);
+    
+        if(otherParam){
+            await this.setState({
+                isLoading: true,
+                cityName: otherParam,
+                inputCity: otherParam
+              })
+        }
+       await this.callApi();
+      }
+
+      
+  goToHourly = () => {
+    const pushAction = StackActions.push({
+        routeName: 'HourlyWeather',
+        params: {
+            otherParam: this.state.inputCity,
+        },
+    });
+      this.props.navigation.dispatch(pushAction);
   }
 
-  callApi(){
+
+  async callApi(){
     return fetch('https://api.openweathermap.org/data/2.5/weather?q='+ this.state.inputCity + '&units=metric&appid=5cacdcffc387b9b5dd7ec2505797e494')
       .then((response) => response.json())
       .then((responseJson) => {
@@ -74,8 +93,6 @@ export default class CurrentWeather extends React.Component {
     })
   }
 
-
-   
    
   render() {
     if (this.state.isLoading) {
@@ -97,6 +114,9 @@ export default class CurrentWeather extends React.Component {
 
         <TouchableOpacity style={styles.button} onPress={this.onPress}>
         <Text style={styles.textViewContainer}>Search</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => this.goToHourly() }>
+        <Text style={styles.textViewContainer}>Hourly</Text>
         </TouchableOpacity>
         <Text style={styles.cityText} > {this.state.cityName} </Text>
 
@@ -122,6 +142,9 @@ export default class CurrentWeather extends React.Component {
 
         <TouchableOpacity style={styles.button} onPress={this.onPress}>
         <Text style={styles.textViewContainer}>Search</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => this.goToHourly() }>
+        <Text style={styles.textViewContainer}>Hourly</Text>
         </TouchableOpacity>
 
         <Text style={styles.textViewContainer}>Incorrect city name</Text>
