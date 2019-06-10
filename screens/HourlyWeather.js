@@ -11,6 +11,7 @@ import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, Image, Scr
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from "moment";
 import { StackActions, NavigationActions } from 'react-navigation';
+import LinearGradient from 'react-native-linear-gradient';
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
@@ -26,7 +27,7 @@ export default class HourlyWeather extends React.Component {
           },
           title: 'Hourly forecast',
           headerStyle: {
-            backgroundColor: '#287bef',
+            backgroundColor: '#3b5998',
           },
           headerTintColor: '#fff',
           headerTintStyle: {
@@ -129,9 +130,11 @@ export default class HourlyWeather extends React.Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#c1d7ff' }}>
+        <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size={'large'} />
         </View>
+        </LinearGradient>
       );
     }
 
@@ -180,11 +183,13 @@ export default class HourlyWeather extends React.Component {
     }
   
     return (
+        <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
         <ScrollView contentContainerStyle={styles.container}>
         <TextInput
-          style={styles.buttonViewContainer}
-          placeholder="Type in the city you want to check!"
-          onChangeText={(inputCity) => this.setState({inputCity})}
+        placeholder="Type in the city you want to check!"
+        placeholderTextColor="#FFFFFF"
+         style={styles.buttonViewContainer}
+         onChangeText={(inputCity) => this.setState({inputCity})}
         />
 
         <TouchableOpacity style={styles.button} onPress={this.onPress}>
@@ -197,26 +202,30 @@ export default class HourlyWeather extends React.Component {
         <Text style={styles.cityText} >{this.state.cityName}</Text>
         {rowsOfTiles} 
       </ScrollView>  
+      </LinearGradient>
     );
 } else {
   return (
+    <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
     <View style={styles.container}>
   <TextInput
-      style={styles.buttonViewContainer}
-      placeholder="Type in the city you want to check!"
-      onChangeText={(inputCity) => this.setState({inputCity})}
+        placeholder="Type in the city you want to check!"
+        placeholderTextColor="#FFFFFF"
+         style={styles.buttonViewContainer}
+         onChangeText={(inputCity) => this.setState({inputCity})}
     />
 
     <TouchableOpacity style={styles.button} onPress={this.onPress}>
     <Text style={styles.textViewContainer}>Search</Text>
     </TouchableOpacity>
+
     <TouchableOpacity style={styles.button} onPress={() => this.goToCurrent() }>
     <Text style={styles.textViewContainer}>Current</Text>
     </TouchableOpacity>
 
     <Text style={styles.textViewContainer}>Incorrect city name</Text>
-
   </View>
+</LinearGradient>
 );
 }
   } 
@@ -228,7 +237,9 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#c1d7ff',
+  },
+  linearGradient: {
+    flex: 1,
   },
       tile: {
         width: width,
@@ -250,7 +261,8 @@ const styles = StyleSheet.create({
       tileTextName: {
         fontSize: 18,
         textAlign: 'center',
-        margin: 10
+        margin: 10,
+        color: 'white'
       },
       tileIconName: { 
         textAlign: 'center',
@@ -258,7 +270,8 @@ const styles = StyleSheet.create({
       },
       tileTemp: {
         fontSize: 25,
-        textAlign: 'center'
+        textAlign: 'center',
+        color: 'white'
       },
       tileTextPlus: {
         fontSize: 96,
@@ -281,9 +294,10 @@ const styles = StyleSheet.create({
         marginBottom: 25,
         width: 150,
         alignItems: 'center',
-        backgroundColor: '#2196F3',
-        justifyContent: 'center',
-        borderRadius: 40
+        backgroundColor: '#3b5998',
+        borderRadius: 40,
+        borderColor: 'white',
+        borderWidth: 1
       },
       button2: {
         marginBottom: 25,
@@ -298,23 +312,24 @@ const styles = StyleSheet.create({
        textAlignVertical:'center', 
        padding:10,
        fontSize: 20,
-       color: '#053f60',
+       color: 'white',
       },
     
       cityText: {
         textAlignVertical:'center', 
         padding:10,
         fontSize: 40,
-        color: '#053f60',
+        color: 'white',
        },
       
-      buttonViewContainer: {
-       marginBottom: 25,
-       textAlignVertical:'center', 
-       padding:10,
-       fontSize: 20,
-       borderRadius: 10,
-       backgroundColor: '#2196F3',
-        
-       }
+       buttonViewContainer: {
+        marginBottom: 25,
+        textAlignVertical:'center', 
+        padding:10,
+        fontSize: 20,
+        borderRadius: 10,
+        backgroundColor: '#3b5998',
+        color: 'white'
+         
+        }
 });

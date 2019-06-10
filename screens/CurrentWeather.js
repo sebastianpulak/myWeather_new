@@ -7,9 +7,10 @@
  */
 
 import React, {Component} from 'react';
-import { AppRegistry, StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, TextInput, Image, ScrollView} from 'react-native';
+import { AppRegistry, StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, TextInput, Image, ScrollView, StatusBar} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { StackActions, NavigationActions } from 'react-navigation';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class CurrentWeather extends React.Component {
       
@@ -22,7 +23,7 @@ export default class CurrentWeather extends React.Component {
               },
               title: 'Current weather',
               headerStyle: {
-                backgroundColor: '#287bef',
+                backgroundColor: '#3b5998',
               },
               headerTintColor: '#fff',
               headerTintStyle: {
@@ -100,19 +101,26 @@ export default class CurrentWeather extends React.Component {
   render() {
     if (this.state.isLoading) {
       return (
+        <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#c1d7ff' }}>
+        <StatusBar backgroundColor="#3b5998" barStyle="light-content" />
           <ActivityIndicator size={'large'}/>
         </View>
+        </LinearGradient>
       );
     }
     
     if(this.state.dataSource.cod===200){
     return (
+    <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
       <ScrollView contentContainerStyle={styles.container}>
+      <StatusBar backgroundColor="#3b5998" barStyle="light-content" />
       <TextInput
+            placeholder="Type in the city you want to check!"
+            placeholderTextColor="#FFFFFF"
           style={styles.buttonViewContainer}
-          placeholder="Type in the city you want to check!"
           onChangeText={(inputCity) => this.setState({inputCity})}
+          underlineColorAndroid='transparent'
         />
 
         <TouchableOpacity style={styles.button} onPress={this.onPress}>
@@ -132,15 +140,20 @@ export default class CurrentWeather extends React.Component {
         <Text style={styles.textViewContainer} > Cloudiness: {this.state.dataSource.clouds.all}%</Text>
         </View>
       </ScrollView>
+      </LinearGradient>
     );
     }
     else {
       return (
+        <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
         <View style={styles.container}>
+        <StatusBar backgroundColor="#3b5998" barStyle="light-content" />
       <TextInput
+        placeholder="Type in the city you want to check!"
+         placeholderTextColor="#FFFFFF"
           style={styles.buttonViewContainer}
-          placeholder="Type in the city you want to check!"
           onChangeText={(inputCity) => this.setState({inputCity})}
+          underlineColorAndroid='transparent'
         />
 
         <TouchableOpacity style={styles.button} onPress={this.onPress}>
@@ -153,6 +166,7 @@ export default class CurrentWeather extends React.Component {
         <Text style={styles.textViewContainer}>Incorrect city name</Text>
 
       </View>
+      </LinearGradient>
     );
     }
   }
@@ -164,8 +178,10 @@ export default class CurrentWeather extends React.Component {
     flex: 1,
     paddingTop: 50,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#c1d7ff',
+    alignItems: 'center'
+  },
+  linearGradient: {
+    flex: 1,
   },
   container2: {
     flexDirection: 'column',
@@ -176,9 +192,11 @@ export default class CurrentWeather extends React.Component {
     marginBottom: 25,
     width: 150,
     alignItems: 'center',
-    backgroundColor: '#2196F3',
+    backgroundColor: '#3b5998',
     justifyContent: 'center',
-    borderRadius: 40
+    borderRadius: 40,
+    borderColor: 'white',
+    borderWidth: 1
   },
   button2: {
     marginBottom: 25,
@@ -193,14 +211,14 @@ export default class CurrentWeather extends React.Component {
    textAlignVertical:'center', 
    padding:10,
    fontSize: 20,
-   color: '#053f60',
+   color: 'white',
   },
 
   cityText: {
     textAlignVertical:'center', 
     padding:10,
     fontSize: 40,
-    color: '#053f60',
+    color: 'white',
    },
   
   buttonViewContainer: {
@@ -209,7 +227,8 @@ export default class CurrentWeather extends React.Component {
    padding:10,
    fontSize: 20,
    borderRadius: 10,
-   backgroundColor: '#2196F3',
+   backgroundColor: '#3b5998',
+   color: 'white'
     
    }
    

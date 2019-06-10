@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, View, Image, ScrollView} from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View, Image, ScrollView, StatusBar} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { StackActions } from 'react-navigation';
+import LinearGradient from 'react-native-linear-gradient';
 import moment from "moment";
 
 export default class Details extends React.Component {
@@ -13,7 +14,7 @@ export default class Details extends React.Component {
           },
           title: 'Details',
           headerStyle: {
-            backgroundColor: '#287bef',
+            backgroundColor: '#3b5998',
           },
           headerTintColor: '#fff',
           headerTintStyle: {
@@ -71,6 +72,7 @@ export default class Details extends React.Component {
   render() {
     if (!this.state.dataSource.rain){
         return (
+            <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
             <ScrollView contentContainerStyle={styles.container}>
                 
       
@@ -96,9 +98,11 @@ export default class Details extends React.Component {
               <Text style={styles.textViewContainer} > Rain: 0mm</Text>
               </View>
             </ScrollView>
+            </LinearGradient>
           );        
     } else {
     return (
+        <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
       <ScrollView contentContainerStyle={styles.container}>
           
         <TouchableOpacity style={styles.button} onPress={() => this.goToScreen('CurrentWeather') }>
@@ -123,6 +127,7 @@ export default class Details extends React.Component {
         <Text style={styles.textViewContainer} > Rain: {this.state.dataSource.rain["3h"]}mm</Text>
         </View>
       </ScrollView>
+      </LinearGradient>
     );
     }
   }
@@ -134,8 +139,10 @@ export default class Details extends React.Component {
     flex: 1,
     paddingTop: 50,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#c1d7ff',
+    alignItems: 'center'
+  },
+  linearGradient: {
+    flex: 1,
   },
   container2: {
     flexDirection: 'column',
@@ -146,9 +153,11 @@ export default class Details extends React.Component {
     marginBottom: 25,
     width: 150,
     alignItems: 'center',
-    backgroundColor: '#2196F3',
+    backgroundColor: '#3b5998',
     justifyContent: 'center',
-    borderRadius: 40
+    borderRadius: 40,
+    borderColor: 'white',
+    borderWidth: 1
   },
   button2: {
     marginBottom: 25,
@@ -163,14 +172,14 @@ export default class Details extends React.Component {
    textAlignVertical:'center', 
    padding:10,
    fontSize: 20,
-   color: '#053f60',
+   color: 'white',
   },
 
   cityText: {
     textAlignVertical:'center', 
-    padding:10,
-    fontSize: 35,
-    color: '#053f60',
+    padding:5,
+    fontSize: 30,
+    color: 'white',
    },
   
   buttonViewContainer: {
@@ -179,7 +188,8 @@ export default class Details extends React.Component {
    padding:10,
    fontSize: 20,
    borderRadius: 10,
-   backgroundColor: '#2196F3',
+   backgroundColor: '#3b5998',
+   color: 'white'
     
    }
    
