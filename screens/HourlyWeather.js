@@ -8,11 +8,37 @@
 
 import React, {Component} from 'react';
 import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, Image, ScrollView, Dimensions,TextInput} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from "moment";
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 export default class HourlyWeather extends React.Component {
+
+    
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+          headerTitleStyle: {
+            alignSelf: 'center',
+            flex: 1
+          },
+          title: 'Hourly forecast',
+          headerStyle: {
+            backgroundColor: '#287bef',
+          },
+          headerTintColor: '#fff',
+          headerTintStyle: {
+            //fontWeight: 'bold',
+          },
+          headerLeft: (
+            <Ionicons style={{ flex: 10, marginLeft: 15 }} name="ios-arrow-back" size={30} color="#fff"
+              onPress={() => navigation.navigate('Main')} />
+          )
+        }
+      };
+      
+
 
   
   constructor(props) {
@@ -24,14 +50,26 @@ export default class HourlyWeather extends React.Component {
       iconUrl: 'http://openweathermap.org/img/w/'
     }
   }
+  
    
 
    
-  componentDidMount() {
-   this.callApi();
+  async componentDidMount() {
+    const { navigation } = this.props;
+    const otherParam = navigation.getParam('otherParam');
+
+    if(otherParam){
+        await this.setState({
+            isLoading: true,
+            cityName: otherParam,
+            inputCity: otherParam
+          })
+    }
+
+   await this.callApi();
   }
 
-  callApi(){
+  async callApi(){
     return fetch('https://api.openweathermap.org/data/2.5/forecast?q='+ this.state.inputCity + '&units=metric&appid=5cacdcffc387b9b5dd7ec2505797e494')
       .then((response) => response.json())
       .then((responseJson) => {
@@ -46,7 +84,7 @@ export default class HourlyWeather extends React.Component {
       });
   }
 
-  onPress = () => {
+  onPress = () => {   
     this.setState({
       isLoading: true,
       cityName: this.state.inputCity
@@ -54,17 +92,11 @@ export default class HourlyWeather extends React.Component {
     this.callApi();
     
   }
-
-  goToScreen = (screenName) => {
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: screenName
-      }
-    })
-  }
-   
-   
+    
   render() {
+    const { navigation } = this.props;
+    const otherParam = navigation.getParam('otherParam', 'some default value');
+
     if (this.state.isLoading) {
       return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center' }}>

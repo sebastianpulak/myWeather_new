@@ -7,23 +7,45 @@
  */
 
 import React, {Component} from 'react';
-import { AppRegistry, StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, TextInput, Image} from 'react-native';
-//var moment = require('moment');
+import { AppRegistry, StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, TextInput, Image, ScrollView} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default class CurrentWeather extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          isLoading: true,
+          inputCity: 'London',
+          cityName: 'London',
+          iconUrl: 'http://openweathermap.org/img/w/',
+        }
+      }
 
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-      inputCity: 'London',
-      cityName: 'London',
-      iconUrl: 'http://openweathermap.org/img/w/',
-      //dateString: moment.unix(1556226000).format("MM/DD/YYYY")
-    }
-  }
-   
+    static navigationOptions = ({ navigation, state }) => {
+        return {
+          headerTitleStyle: {
+            alignSelf: 'center',
+            flex: 1
+          },
+          title: 'Current weather',
+          headerStyle: {
+            backgroundColor: '#287bef',
+          },
+          headerTintColor: '#fff',
+          headerLeft: (
+            <Ionicons style={{ flex: 10, marginLeft: 15 }} name="ios-arrow-back" size={30} color="#fff"
+              onPress={() => navigation.navigate('Main')} />
+          ),
+
+          headerRight: (
+            <Text onPress={() => { navigation.navigate('HourlyWeather', {
+                otherParam: state.inputCity,
+              })
+            }}>Hourly weather</Text>
+            
+          )
+        }
+      };  
   
    
   componentDidMount() {
@@ -66,7 +88,7 @@ export default class CurrentWeather extends React.Component {
     
     if(this.state.dataSource.cod===200){
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
       <TextInput
           style={styles.buttonViewContainer}
           placeholder="Type in the city you want to check!"
@@ -79,14 +101,14 @@ export default class CurrentWeather extends React.Component {
         <Text style={styles.cityText} > {this.state.cityName} </Text>
 
         <View style={styles.container2}>
-        <Text style={styles.textViewContainer} > {Math.round(this.state.dataSource.main.temp)}℃ 
+        <Text style={styles.textViewContainer} > Temperature: {Math.round(this.state.dataSource.main.temp)}℃ 
         <Image style={{height: 40, width: 40}} source={{uri: this.state.iconUrl + this.state.dataSource.weather[0].icon+'.png'}}></Image></Text>
         <Text style={styles.textViewContainer} > Humidity: {this.state.dataSource.main.humidity}%</Text>
         <Text style={styles.textViewContainer} > Pressure: {this.state.dataSource.main.pressure} hPa</Text>
         <Text style={styles.textViewContainer} > Wind: {this.state.dataSource.wind.speed} km/h</Text>
         <Text style={styles.textViewContainer} > Cloudiness: {this.state.dataSource.clouds.all}%</Text>
         </View>
-      </View>
+      </ScrollView>
     );
     }
     else {
