@@ -32,8 +32,8 @@ export default class HourlyWeather extends React.Component {
           headerTintStyle: {
             //fontWeight: 'bold',
           },
-          headerLeft: (
-            <Ionicons style={{ flex: 10, marginLeft: 15 }} name="ios-arrow-back" size={30} color="#fff"
+          headerRight: (
+            <Ionicons style={{ flex: 1, marginRight: 15 }} name="ios-home" size={30} color="#fff"
               onPress={() => navigation.navigate('Main')} />
           )
         }
@@ -87,8 +87,6 @@ export default class HourlyWeather extends React.Component {
             isShown: false
           })
     }
-
-
    await this.callApi();
   }
 
@@ -115,11 +113,23 @@ export default class HourlyWeather extends React.Component {
           isShown: !this.state.isShown
       })
   }
+
+  goToDetails = (inputDetails, city) => {
+    const pushAction = StackActions.push({
+        routeName: 'Details',
+        params: {
+            inputFromHourly: inputDetails,
+            cityNamed: city
+        },
+    });
+      this.props.navigation.dispatch(pushAction);
+  }
+  
     
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#c1d7ff' }}>
           <ActivityIndicator size={'large'} />
         </View>
       );
@@ -129,26 +139,31 @@ export default class HourlyWeather extends React.Component {
     let rowsOfTiles = [];
     let row = [];
     for (let i = 0; i < this.state.dataSource.list.length-1; i++) {
-      row.push(
-        <View key={i}>
-          <TouchableOpacity style={styles.tile} key={i} onPress={this.show}>
-            <Text style={styles.tileTextName}>{moment.unix(this.state.dataSource.list[i].dt).format("DD.MM.YYYY HH:mm")}</Text>
-            <Text style={styles.tileTemp}> {Math.round(this.state.dataSource.list[i].main.temp)}℃
-            <Image style={{height: 40, width: 40}} source={{uri: this.state.iconUrl + this.state.dataSource.list[i].weather[0].icon+'.png'}}></Image></Text>
-          </TouchableOpacity>
-          {
-              this.state.isShown &&
-              <View>
-          <Text style={styles.textViewContainer} key={i} > Temperature: {Math.round(this.state.dataSource.list[i].main.temp)}℃ 
-        <Image style={{height: 40, width: 40} } key={i} source={{uri: this.state.iconUrl + this.state.dataSource.list[i].weather[0].icon+'.png'}}></Image></Text>
-        <Text style={styles.textViewContainer} key={i}> Humidity: {this.state.dataSource.list[i].main.humidity}%</Text>
-        <Text style={styles.textViewContainer} key={i}> Pressure: {this.state.dataSource.list[i].main.pressure} hPa</Text>
-        <Text style={styles.textViewContainer} key={i}> Wind: {this.state.dataSource.list[i].wind.speed} km/h</Text>
-        <Text style={styles.textViewContainer} key={i}> Cloudiness: {this.state.dataSource.list[i].clouds.all}%</Text> 
-        </View>
-            }
-        </View>
-      );
+        if (!this.state.dataSource.list[i].rain){
+            row.push(
+                <View key={i}>
+                  <TouchableOpacity style={styles.tile} key={i} onPress={() => this.goToDetails(this.state.dataSource.list[i], this.state.cityName) }>
+                    <Text style={styles.tileTextName}>{moment.unix(this.state.dataSource.list[i].dt).format("DD.MM.YYYY HH:mm")}</Text>
+                    <Text style={styles.tileTemp}> {Math.round(this.state.dataSource.list[i].main.temp)}℃
+                    <Image style={{height: 40, width: 40}} source={{uri: this.state.iconUrl + this.state.dataSource.list[i].weather[0].icon+'.png'}}></Image></Text>
+                    <Text style={styles.tileTextName}>Rain: 0mm</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+        } else {
+            row.push(
+                <View key={i}>
+                  <TouchableOpacity style={styles.tile} key={i} onPress={() => this.goToDetails(this.state.dataSource.list[i], this.state.cityName) }>
+                    <Text style={styles.tileTextName}>{moment.unix(this.state.dataSource.list[i].dt).format("DD.MM.YYYY HH:mm")}</Text>
+                    <Text style={styles.tileTemp}> {Math.round(this.state.dataSource.list[i].main.temp)}℃
+                    <Image style={{height: 40, width: 40}} source={{uri: this.state.iconUrl + this.state.dataSource.list[i].weather[0].icon+'.png'}}></Image></Text>
+                    <View>
+                    <Text style={styles.tileTextName}>Rain: {this.state.dataSource.list[i].rain["3h"]}mm</Text>
+                    </View>                    
+                  </TouchableOpacity>
+                </View>
+              );
+        }
         rowsOfTiles.push(
           <View style={styles.rowOfTiles} key={i}>
             {row}
@@ -162,7 +177,6 @@ export default class HourlyWeather extends React.Component {
           </View>  
         )
       }
-      console.log(rowsOfTiles); 
     }
   
     return (
@@ -180,19 +194,7 @@ export default class HourlyWeather extends React.Component {
         <Text style={styles.textViewContainer}>Current</Text>
         </TouchableOpacity>
         
-        <Text style={styles.cityText} > {this.state.cityName} </Text>
-        {/* <FlatList
-              data={this.state.data}
-              keyExtractor = {item => item.main.temp}
-              renderItem={({ item }) => (
-                           <TouchableOpacity style={styles.tile} onPress={this.show}>
-                           <Text style={styles.tileTextName}>{moment.unix(item.dt).format("DD.MM.YYYY HH:mm")}</Text>
-                           <Text style={styles.tileTemp}> {Math.round(item.main.temp)}℃
-                           <Image style={{height: 40, width: 40}} source={{uri: this.state.iconUrl + item.weather[0].icon+'.png'}}></Image></Text>
-                         </TouchableOpacity>
-                         
-              )} 
-            /> */}
+        <Text style={styles.cityText} >{this.state.cityName}</Text>
         {rowsOfTiles} 
       </ScrollView>  
     );
@@ -223,10 +225,11 @@ export default class HourlyWeather extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        paddingTop: 50,
-        alignItems: 'center',
-        justifyContent: 'center'
-      },
+    paddingTop: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#c1d7ff',
+  },
       tile: {
         width: width,
         height: 100,
@@ -254,7 +257,7 @@ const styles = StyleSheet.create({
         margin: 10
       },
       tileTemp: {
-        fontSize: 30,
+        fontSize: 25,
         textAlign: 'center'
       },
       tileTextPlus: {

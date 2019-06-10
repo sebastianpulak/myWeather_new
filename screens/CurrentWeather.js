@@ -15,21 +15,23 @@ export default class CurrentWeather extends React.Component {
       
 
     static navigationOptions = ({ navigation }) => {
-        const { params = {} } = navigation.state;
         return {
-          headerTitleStyle: {
-            alignSelf: 'center',
-            flex: 1
-          },
-          title: 'Current weather',
-          headerStyle: {
-            backgroundColor: '#287bef',
-          },
-          headerTintColor: '#fff',
-          headerLeft: (
-            <Ionicons style={{ flex: 10, marginLeft: 15 }} name="ios-arrow-back" size={30} color="#fff"
-              onPress={() => navigation.navigate('Main')} />
-          ),
+            headerTitleStyle: {
+                alignSelf: 'center',
+                flex: 1
+              },
+              title: 'Current weather',
+              headerStyle: {
+                backgroundColor: '#287bef',
+              },
+              headerTintColor: '#fff',
+              headerTintStyle: {
+                //fontWeight: 'bold',
+              },
+              headerRight: (
+                <Ionicons style={{ flex: 1, marginRight: 15 }} name="ios-home" size={30} color="#fff"
+                  onPress={() => navigation.navigate('Main')} />
+              )
         }
       };  
 
@@ -71,6 +73,7 @@ export default class CurrentWeather extends React.Component {
   }
 
 
+
   async callApi(){
     return fetch('https://api.openweathermap.org/data/2.5/weather?q='+ this.state.inputCity + '&units=metric&appid=5cacdcffc387b9b5dd7ec2505797e494')
       .then((response) => response.json())
@@ -97,7 +100,7 @@ export default class CurrentWeather extends React.Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#c1d7ff' }}>
           <ActivityIndicator size={'large'}/>
         </View>
       );

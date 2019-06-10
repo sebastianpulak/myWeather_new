@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity, Image} from 'react-native';
+import { Platform, StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, StatusBar} from 'react-native';
 const names = Platform.select({
   android:
     'Sebastian Pulak\n' +
@@ -33,7 +33,7 @@ export default class Main extends React.Component {
       },
       title: 'Home',
       headerStyle: {
-        backgroundColor: '#287bef',
+        backgroundColor: '#FFBF00',
       },
       headerTintColor: '#fff',
       headerTintStyle: {
@@ -50,6 +50,7 @@ export default class Main extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+          <StatusBar backgroundColor="#c1d7ff" barStyle="dark-content" />
       <Image
           style={{width: 150, height: 150}}
           source={{uri: 'https://cdn4.iconfinder.com/data/icons/weather-line-set/24/icn-weather-scattered-showers-512.png'}}
