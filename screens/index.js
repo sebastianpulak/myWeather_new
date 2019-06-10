@@ -4,18 +4,18 @@ import { createAppContainer, createStackNavigator } from 'react-navigation';
 import Main from './Main';
 import CurrentWeather from './CurrentWeather';
 import HourlyWeather from './HourlyWeather';
-
-
-// create our app’s navigation stack
+import Details from './Details';
 
 const AppNavigator = createStackNavigator(
     {
         Main: Main,
         CurrentWeather: CurrentWeather,
-        HourlyWeather: HourlyWeather
+        HourlyWeather: HourlyWeather,
+        Details: Details
     },
     {
-        initialRouteName: "Main"
+        initialRouteName: "Main",
+        headerLayoutPreset: 'center'
     });
 
 const AppContainer = createAppContainer(AppNavigator);
