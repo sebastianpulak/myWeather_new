@@ -21,7 +21,7 @@ export default class CurrentWeather extends React.Component {
         }
       }
 
-    static navigationOptions = ({ navigation, state }) => {
+    static navigationOptions = ({ navigation }) => {
         return {
           headerTitleStyle: {
             alignSelf: 'center',
@@ -39,7 +39,7 @@ export default class CurrentWeather extends React.Component {
 
           headerRight: (
             <Text onPress={() => { navigation.navigate('HourlyWeather', {
-                otherParam: state.inputCity,
+                otherParam: this.state.inputCity,
               })
             }}>Hourly weather</Text>
             
