@@ -21,7 +21,7 @@ export default class Main extends React.Component {
   state = {
     names: [
       { 'name': 'Current weather', 'id': 1, 'test': 'CurrentWeather' },
-      { 'name': 'Hourly forecast', 'id': 2, 'test': 'HourlyWeather' },
+      { 'name': 'Forecast', 'id': 2, 'test': 'HourlyWeather' },
     ]
   }
 
@@ -55,7 +55,7 @@ export default class Main extends React.Component {
           <StatusBar backgroundColor="#3b5998" barStyle="light-content" />
       <Image
           style={{width: 150, height: 150}}
-          source={{uri: 'https://cdn4.iconfinder.com/data/icons/weather-line-set/24/icn-weather-scattered-showers-512.png'}}
+          source={{uri: 'https://cdn1.iconfinder.com/data/icons/weather-429/64/weather_icons_color-14-512.png'}}
         />
         <Text style={styles.logo}>MyWeather App </Text>
         <Text style={styles.create}>Created by: </Text>
@@ -64,11 +64,9 @@ export default class Main extends React.Component {
             this.state.names.map((item, index) => (
                 
               <View style={styles.container2} key={item.id}>
-                  <LinearGradient colors={['#4c669f', '#192f6a']} style={styles.linearGradientButton}>
                 <TouchableOpacity style={styles.button} onPress={() => this.goToScreen(item.test)}>
                 <Text style={styles.text}>{item.name}</Text>
-                </TouchableOpacity> 
-                </LinearGradient>   
+                </TouchableOpacity>  
                             
               </View>
               
@@ -92,8 +90,8 @@ const styles = StyleSheet.create({
   },
   container2: {
     flex: 1,
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 5,
+    paddingBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -109,8 +107,9 @@ const styles = StyleSheet.create({
     width: 260,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 40,
-    //borderWidth: 1
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: 'white'
   },
   text: {
     textAlign: 'center',
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
   },
   names:{
     padding: 10,
-    color: 'black',
+    color: 'white',
     fontSize: 20,
     justifyContent: 'center',
     alignItems: 'center',
