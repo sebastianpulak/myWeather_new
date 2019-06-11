@@ -124,7 +124,7 @@ export default class Details extends React.Component {
         <Text style={styles.textViewContainer} > Pressure: {this.state.dataSource.main.pressure} hPa</Text>
         <Text style={styles.textViewContainer} > Wind: {this.state.dataSource.wind.speed} km/h</Text>
         <Text style={styles.textViewContainer} > Cloudiness: {this.state.dataSource.clouds.all}%</Text>
-        <Text style={styles.textViewContainer} > Rain: {this.state.dataSource.rain["3h"]}mm</Text>
+        <Text style={styles.textViewContainer} > Rain: {(this.state.dataSource.rain["3h"]).toFixed(2)}mm</Text>
         </View>
       </ScrollView>
       </LinearGradient>
@@ -170,7 +170,7 @@ export default class Details extends React.Component {
    
   textViewContainer: {
    textAlignVertical:'center', 
-   padding:10,
+   padding:5,
    fontSize: 20,
    color: 'white',
   },

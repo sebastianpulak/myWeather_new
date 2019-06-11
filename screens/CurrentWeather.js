@@ -127,7 +127,7 @@ export default class CurrentWeather extends React.Component {
         <Text style={styles.textViewContainer}>Search</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => this.goToHourly() }>
-        <Text style={styles.textViewContainer}>Hourly</Text>
+        <Text style={styles.textViewContainer}>Forecast</Text>
         </TouchableOpacity>
         <Text style={styles.cityText} > {this.state.cityName} </Text>
 
@@ -160,7 +160,7 @@ export default class CurrentWeather extends React.Component {
         <Text style={styles.textViewContainer}>Search</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => this.goToHourly() }>
-        <Text style={styles.textViewContainer}>Hourly</Text>
+        <Text style={styles.textViewContainer}>Forecast</Text>
         </TouchableOpacity>
 
         <Text style={styles.textViewContainer}>Incorrect city name</Text>
@@ -175,10 +175,10 @@ export default class CurrentWeather extends React.Component {
   const styles = StyleSheet.create({
    
   container: {
-    flex: 1,
-    paddingTop: 50,
+    flexGrow: 1,
+    paddingTop: 40,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   linearGradient: {
     flex: 1,
@@ -189,7 +189,7 @@ export default class CurrentWeather extends React.Component {
   },
 
   button: {
-    marginBottom: 25,
+    marginBottom: 15,
     width: 150,
     alignItems: 'center',
     backgroundColor: '#3b5998',
@@ -209,7 +209,7 @@ export default class CurrentWeather extends React.Component {
    
   textViewContainer: {
    textAlignVertical:'center', 
-   padding:10,
+   padding:5,
    fontSize: 20,
    color: 'white',
   },
